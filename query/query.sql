@@ -13,15 +13,19 @@ CREATE TABLE users (id varchar(64) NOT NULL,
 
 CREATE TABLE rooms (room_id varchar(64) NOT NULL, 
     room_name varchar(64) NOT NULL,
+    admin varchar(64) NOT NULL,
     room_description varchar(64),
+    room_img varchar(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP,
     PRIMARY KEY (room_id)
 );
 
 CREATE TABLE messages (message_id varchar(64) NOT NULL, 
-    id_user varchar(64) NOT NULL,
+    id_sender varchar(64) NOT NULL,
+    id_receiver varchar(64) NOT NULL,
     message text,
+    message_img varchar(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (message_id)
 );
@@ -29,6 +33,7 @@ CREATE TABLE messages (message_id varchar(64) NOT NULL,
 CREATE TABLE room_messages (room_message_id varchar(64) NOT NULL, 
     id_room varchar(64) NOT NULL,
     message text,
+    message_img varchar(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (room_message_id)
 );
