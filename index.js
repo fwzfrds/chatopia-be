@@ -74,17 +74,45 @@ app.use((err, req, res, next) => {
   })
 })
 
+const messageModel = require('./models/messageModel')
+const { v4: uuidv4 } = require('uuid')
+
 io.on('connection', (socket) => {
-  console.log(`ada perankat yg terhubung dengan id ${socket.id} dan username: ${socket.handshake.query.id}`)
-  socket.join(socket.handshake.query.id)
+  if (socket.handshake.query.id) {
+    socket.join(socket.handshake.query.id)
+    console.log(`ada perankat yg terhubung dengan id ${socket.id} dan username: ${socket.handshake.query.id}`)
+  } else if (socket.handshake.query.idRoom) {
+    socket.join(socket.handshake.query.idRoom)
+    console.log(`Grup Aktif: ${socket.handshake.query.idRoom}`)
+  }
   // console.log(socket.handshake.query)
   socket.on('message', (data) => {
+    const messageData = {
+      messageId: uuidv4(),
+      idSender: `${socket.handshake.query.id}`,
+      idReceiver: `${data.to}`,
+      message: data.message
+    }
+    messageModel.sendMessage(messageData)
     console.log(`Pesannya: ${data.message} Tujuannya: ${data.to}`)
     socket.to(data.to).emit('messageBE', { message: data.message, date: new Date() })
     // socket.broadcast.emit('messageBE', {message: data, date: new Date()})
     // io.emit('messageBE', {message: data, date: new Date()})
     // socket.broadcast.to('0ffppraFNq1bEKHfAAAF').emit('messageBE', { message: data, date: new Date() })
   })
+
+  socket.on('roomMessage', (data) => {
+    const messageData = {
+      messageId: uuidv4(),
+      idRoom: `${socket.handshake.query.idRoom}`,
+      idSender: `${socket.handshake.query.idSender}`,
+      message: data.message
+    }
+    console.log(messageData)
+    console.log(`Pesannya: ${data.message} Tujuannya:${socket.handshake.query.idRoom}`)
+    socket.broadcast.to(socket.handshake.query.idRoom).emit('roomMessageBE', { message: data.message, date: new Date() })
+  })
+
   socket.on('disconnect', () => {
     console.log(`ada perangkat yg terputus dengan id ${socket.id}`)
   })
