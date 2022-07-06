@@ -11,6 +11,18 @@ const select = ({ limit, offset }) => {
   })
 }
 
+const getUserContact = (userID) => {
+  return new Promise((resolve, reject) => {
+    pool.query(`SELECT * FROM users WHERE id <> ${userID}`, (err, result) => {
+      if (!err) {
+        resolve(result)
+      } else {
+        reject(new Error(err))
+      }
+    })
+  })
+}
+
 const usersDetail = (email) => {
   return new Promise((resolve, reject) => {
     pool.query(`SELECT * FROM users WHERE email = '${email}';`, (error, result) => {
@@ -138,7 +150,8 @@ module.exports = {
   findByEmail,
   findByID,
   usersDetail,
-  activateStatus
+  activateStatus,
+  getUserContact
 }
 
 // perbaiki masalah ini tadinay udah undefined dan teratasi oleh coalesce tapi ini value nya jadi undefined harusnya null

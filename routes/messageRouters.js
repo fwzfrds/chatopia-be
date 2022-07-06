@@ -6,6 +6,6 @@ const uploadPhoto = require('../middlewares/uploadPhoto')
 
 router
   .post('/send', protect, isUser, uploadPhoto.single('message_img'), sendMessage)
-  .get('/get', protect, isUser, getMessage)
+  .get('/get/:receiverId', protect, isUser, getMessage)
 
 module.exports = router

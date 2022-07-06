@@ -7,28 +7,28 @@ const cloudinary = require('../config/cloudinaryConfig')
 const errorServer = new createError.InternalServerError()
 
 const sendMessage = async (req, res, next) => {
-  const idSender = req.decoded.id
-  const { message, idReceiver } = req.body
-  let messageImg
+  const id_sender = req.decoded.id
+  const { message, id_receiver } = req.body
+  let message_img
 
   console.log(req.file)
 
   const messageData = {
-    messageId: uuidv4(),
-    idSender,
-    idReceiver,
+    message_id: uuidv4(),
+    id_sender,
+    id_receiver,
     message,
-    messageImg
+    message_img
   }
 
   try {
     // Upload Photo single ke Cloudinary
     if (req.file) {
       console.log(req.file.path)
-      messageImg = req.file.path
+      message_img = req.file.path
 
       const url = await new Promise((resolve, reject) => {
-        cloudinary.uploader.upload(messageImg, { folder: 'chatopia/message' }, function (error, result) {
+        cloudinary.uploader.upload(message_img, { folder: 'chatopia/message' }, function (error, result) {
           if (result) {
             resolve(result.url)
           } else if (error) {
@@ -37,7 +37,7 @@ const sendMessage = async (req, res, next) => {
         })
       })
 
-      messageData.messageImg = url
+      messageData.message_img = url
     } else {
       console.log('send message without add img')
     }
@@ -52,9 +52,10 @@ const sendMessage = async (req, res, next) => {
 }
 
 const getMessage = async (req, res, next) => {
-  const idSender = `${req.decoded.id}`
-  const { idReceiver } = req.body
-
+  const idSender = `${req.decoded.email}`
+  const idReceiver = req.params.receiverId
+  console.log(`sender: ${idSender}`)
+  console.log(`receiver: ${idReceiver}`)
   try {
     const { rows } = await messageModel.getMessage(idSender, `${idReceiver}`)
     console.log(rows)

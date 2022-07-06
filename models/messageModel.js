@@ -1,8 +1,8 @@
 const pool = require('../db')
 
-const sendMessage = ({ messageId, idSender, idReceiver, message, messageImg }) => {
+const sendMessage = ({ message_id, id_sender, id_receiver, message, message_img }) => {
   return new Promise((resolve, reject) => {
-    pool.query('INSERT INTO messages(message_id, id_sender, id_receiver, message, message_img)VALUES($1, $2, $3, $4, $5)', [messageId, idSender, idReceiver, message, messageImg], (err, result) => {
+    pool.query('INSERT INTO messages(message_id, id_sender, id_receiver, message, message_img)VALUES($1, $2, $3, $4, $5)', [message_id, id_sender, id_receiver, message, message_img], (err, result) => {
       if (!err) {
         resolve(result)
       } else {
@@ -14,7 +14,7 @@ const sendMessage = ({ messageId, idSender, idReceiver, message, messageImg }) =
 
 const getMessage = (idSender, idReceiver) => {
   return new Promise((resolve, reject) => {
-    pool.query(`SELECT * FROM messages WHERE id_sender = '${idSender}' AND id_receiver = '${idReceiver}'`, (err, result) => {
+    pool.query(`SELECT * FROM messages WHERE (id_sender = '${idSender}' AND id_receiver = '${idReceiver}') OR (id_sender = '${idReceiver}' AND id_receiver = '${idSender}')`, (err, result) => {
       if (!err) {
         resolve(result)
       } else {

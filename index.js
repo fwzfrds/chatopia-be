@@ -78,30 +78,34 @@ const messageModel = require('./models/messageModel')
 const { v4: uuidv4 } = require('uuid')
 
 io.on('connection', (socket) => {
-  if (socket.handshake.query.id) {
-    socket.join(socket.handshake.query.id)
-    console.log(`ada perankat yg terhubung dengan id ${socket.id} dan username: ${socket.handshake.query.id}`)
+  if (socket.handshake.query.email) {
+    socket.join(socket.handshake.query.email)
+    console.log(socket.handshake.query)
+    console.log(`ada perankat yg terhubung dengan id ${socket.id} dan email: ${socket.handshake.query.email}`)
   } else if (socket.handshake.query.idRoom) {
     socket.join(socket.handshake.query.idRoom)
     console.log(`Grup Aktif: ${socket.handshake.query.idRoom}`)
   }
-  // console.log(socket.handshake.query)
-  socket.on('message', (data) => {
+
+  socket.on('message', (data, callbackTest) => {
     const messageData = {
-      messageId: uuidv4(),
-      idSender: `${socket.handshake.query.id}`,
-      idReceiver: `${data.to}`,
-      message: data.message
+      message_id: uuidv4(),
+      id_sender: `${socket.handshake.query.email}`,
+      id_receiver: `${data.to}`,
+      message: data.message.message
     }
     messageModel.sendMessage(messageData)
-    console.log(`Pesannya: ${data.message} Tujuannya: ${data.to}`)
-    socket.to(data.to).emit('messageBE', { message: data.message, date: new Date() })
+    console.log(messageData)
+    console.log(`Pesannya: ${data.message.message} Tujuannya: ${data.to}`)
+    callbackTest({ ...messageData, date: new Date() })
+    socket.to(data.to).emit('messageBE', { ...messageData, created_at: new Date() })
     // socket.broadcast.emit('messageBE', {message: data, date: new Date()})
     // io.emit('messageBE', {message: data, date: new Date()})
     // socket.broadcast.to('0ffppraFNq1bEKHfAAAF').emit('messageBE', { message: data, date: new Date() })
   })
 
   socket.on('roomMessage', (data) => {
+    console.log('room message send')
     const messageData = {
       messageId: uuidv4(),
       idRoom: `${socket.handshake.query.idRoom}`,
@@ -110,7 +114,7 @@ io.on('connection', (socket) => {
     }
     console.log(messageData)
     console.log(`Pesannya: ${data.message} Tujuannya:${socket.handshake.query.idRoom}`)
-    socket.broadcast.to(socket.handshake.query.idRoom).emit('roomMessageBE', { message: data.message, date: new Date() })
+    socket.to(socket.handshake.query.idRoom).emit('roomMessageBE', { message: data.message, date: new Date() })
   })
 
   socket.on('disconnect', () => {

@@ -51,9 +51,23 @@ const getUsers = async (req, res, next) => {
   }
 }
 
+const getUserContact = async (req, res, next) => {
+  // get users except my account
+  const userID = `'${req.decoded.id}'`
+
+  try {
+    const { rows } = await usersModel.getUserContact(userID)
+    // console.log(rows)
+
+    response(res, rows, 200, 'Get data success')
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 const getProfileDetail = async (req, res, next) => {
   const email = req.decoded.email
-  console.log(email)
+
   const { rows: [user] } = await usersModel.usersDetail(email)
 
   if (user === undefined) {
@@ -213,7 +227,7 @@ const userActivate = async (req, res, next) => {
 }
 
 const updateUsers = async (req, res, next) => {
-  const file = req.file
+  // const file = req.file
   const emailID = req.decoded.email
   const { name, email, password, phone, activationStatus, photo } = req.body
   const updatedAt = new Date()
@@ -273,38 +287,27 @@ const updateUsers = async (req, res, next) => {
 
       data.photo = url
 
-      // Delete Previous image
-      const prevPhoto = userDetail.photo
-      let prevPhotoId = prevPhoto.split('/')
-      prevPhotoId = prevPhotoId.slice(-1)
-      prevPhotoId = prevPhotoId[0].split('.')
-      prevPhotoId = prevPhotoId[0]
+      // Delete IF there is Previous image
+      if (userDetail.photo) {
+        const prevPhoto = userDetail.photo
+        let prevPhotoId = prevPhoto.split('/')
+        prevPhotoId = prevPhotoId.slice(-1)
+        prevPhotoId = prevPhotoId[0].split('.')
+        prevPhotoId = prevPhotoId[0]
 
-      const delResultPhoto = await new Promise((resolve, reject) => {
-        cloudinary.uploader.destroy(`recipedia/user/${prevPhotoId}`, { resource_type: 'image' }, function (error, result) {
-          if (result) {
-            resolve(result)
-          } else if (error) {
-            reject(error)
-          }
+        const delResultPhoto = await new Promise((resolve, reject) => {
+          cloudinary.uploader.destroy(`recipedia/user/${prevPhotoId}`, { resource_type: 'image' }, function (error, result) {
+            if (result) {
+              resolve(result)
+            } else if (error) {
+              reject(error)
+            }
+          })
         })
-      })
-      console.log(delResultPhoto)
+        console.log(delResultPhoto)
+      }
     } else {
       console.log('update profile without edit photo')
-    }
-
-    if (data.name === '') {
-      delete data.name
-    }
-    if (data.email === '') {
-      delete data.email
-    }
-    if (data.phone === '') {
-      delete data.phone
-    }
-    if (!file) {
-      delete data.photo
     }
 
     // console.log(data)
@@ -347,7 +350,8 @@ module.exports = {
   loginUsers,
   userActivate,
   userLogout,
-  refreshToken
+  refreshToken,
+  getUserContact
 }
 
 // terakhir sampai sini

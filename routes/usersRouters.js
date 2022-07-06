@@ -8,7 +8,8 @@ const {
   getProfileDetail,
   loginUsers,
   userActivate,
-  userLogout
+  userLogout,
+  getUserContact
   // refreshToken
 } = require('../controllers/usersController')
 const { protect, isUser, isTokenValid } = require('../middlewares/authMiddleware')
@@ -17,6 +18,7 @@ const uploadPhoto = require('../middlewares/uploadPhoto')
 //  ----> /users.....
 router
   .get('/', getUsers)
+  .get('/user-contact', protect, isUser, getUserContact)
   .get('/active/:token', isTokenValid, userActivate)
   .get('/profile', protect, isUser, getProfileDetail)
   .post('/registration', uploadPhoto.single('photo'), insertUsers)
