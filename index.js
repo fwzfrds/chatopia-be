@@ -94,7 +94,7 @@ io.on('connection', (socket) => {
       id_receiver: `${data.to}`,
       message: data.message.message
     }
-    // messageModel.sendMessage(messageData)
+    messageModel.sendMessage(messageData)
     console.log(messageData)
     console.log(`Pesannya: ${data.message.message} Tujuannya: ${data.to}`)
     callbackTest({ ...messageData, created_at: new Date() })
@@ -119,6 +119,7 @@ io.on('connection', (socket) => {
 
   socket.on('delMessage', (data) => {
     console.log(data)
+    messageModel.delMessage(data.message_id)
 
     socket.to(data.id_receiver).emit('delMessageBE', data)
   })

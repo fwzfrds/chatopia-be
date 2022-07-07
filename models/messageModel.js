@@ -24,7 +24,12 @@ const getMessage = (idSender, idReceiver) => {
   })
 }
 
+const delMessage = (message_id) => {
+  return pool.query('DELETE FROM messages WHERE message_id = $1', [message_id])
+}
+
 module.exports = {
   sendMessage,
-  getMessage
+  getMessage,
+  delMessage
 }
