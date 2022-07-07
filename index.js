@@ -94,10 +94,10 @@ io.on('connection', (socket) => {
       id_receiver: `${data.to}`,
       message: data.message.message
     }
-    messageModel.sendMessage(messageData)
+    // messageModel.sendMessage(messageData)
     console.log(messageData)
     console.log(`Pesannya: ${data.message.message} Tujuannya: ${data.to}`)
-    callbackTest({ ...messageData, date: new Date() })
+    callbackTest({ ...messageData, created_at: new Date() })
     socket.to(data.to).emit('messageBE', { ...messageData, created_at: new Date() })
     // socket.broadcast.emit('messageBE', {message: data, date: new Date()})
     // io.emit('messageBE', {message: data, date: new Date()})
@@ -115,6 +115,12 @@ io.on('connection', (socket) => {
     console.log(messageData)
     console.log(`Pesannya: ${data.message} Tujuannya:${socket.handshake.query.idRoom}`)
     socket.to(socket.handshake.query.idRoom).emit('roomMessageBE', { message: data.message, date: new Date() })
+  })
+
+  socket.on('delMessage', (data) => {
+    console.log(data)
+
+    socket.to(data.id_receiver).emit('delMessageBE', data)
   })
 
   socket.on('disconnect', () => {
