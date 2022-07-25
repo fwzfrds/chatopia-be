@@ -7,7 +7,8 @@ const { createServer } = require('http')
 const httpServer = createServer(app)
 const io = new Server(httpServer, {
   cors: {
-    origin: 'https://chatopia.vercel.app'
+    origin: 'https://chatopia.vercel.app',
+    methods: ['GET', 'POST']
   }
 })
 
