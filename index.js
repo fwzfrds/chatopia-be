@@ -31,7 +31,8 @@ app.use(cors())
 app.use(morgan('dev'))
 app.use(cookieParser())
 app.use(helmet({
-  crossOriginResourcePolicy: false
+  crossOriginResourcePolicy: false,
+  crossOriginEmbedderPolicy: false
 }))
 app.use(xss())
 
