@@ -6,12 +6,12 @@ const pool = new Pool({
   password: process.env.DB_PASSWORD,
   port: process.env.DB_PORT,
   // ssl untuk di local
-  ssl: false
+  // ssl: false
 
   // ssl untuk mengatasi error di heroku
-  // ssl: {
-  //   rejectUnauthorized: false
-  // }
+  ssl: {
+    rejectUnauthorized: false
+  }
 })
 
 module.exports = pool
