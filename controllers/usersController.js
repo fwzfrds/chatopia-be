@@ -218,7 +218,7 @@ const userActivate = async (req, res, next) => {
 
     await usersModel.activateStatus(data, emailID)
 
-    res.redirect('http://localhost:3000/auth/user/signin?activation=active')
+    res.redirect('https://chatopia-fwzfrds.vercel.app/auth/user/signin?activation=active')
     response(res, activatedAt, 200, 'Congrats ! your account has been activated')
   } catch (error) {
     console.log(error)
