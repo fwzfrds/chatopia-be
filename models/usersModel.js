@@ -13,7 +13,7 @@ const select = ({ limit, offset }) => {
 
 const getUserContact = (userID) => {
   return new Promise((resolve, reject) => {
-    pool.query(`SELECT * FROM users WHERE id = ${userID}`, (err, result) => {
+    pool.query(`SELECT * FROM users WHERE id != ${userID}`, (err, result) => {
       if (!err) {
         resolve(result)
       } else {
