@@ -7,7 +7,7 @@ const { createServer } = require('http')
 const httpServer = createServer(app)
 const io = new Server(httpServer, {
   cors: {
-    origin: 'http://localhost:3000'
+    origin: ['http://localhost:3000', 'https://chatopia.vercel.app']
   }
 })
 
@@ -26,14 +26,7 @@ const PORT = process.env.PORT || 4000
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
-app.use(cors({
-  credentials: true,
-  // origin: ['http://localhost:3000', 'https://recipedia-ashen.vercel.app', 'https://pijarnext-fwzfrds.vercel.app/']
-  origin: [
-    'https://pijarnext-fwzfrds.vercel.app',
-    'http://localhost:3000'
-  ]
-}))
+app.use(cors())
 app.use(morgan('dev'))
 app.use(cookieParser())
 app.use(helmet({
