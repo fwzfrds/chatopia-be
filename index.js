@@ -8,7 +8,7 @@ const httpServer = createServer(app)
 const io = new Server(httpServer, {
   cors: {
     origin: 'https://chatopia-fwzfrds.vercel.app',
-    methods: ['GET', 'POST']
+    methods: ['GET', 'POST', 'PUT', 'DELETE']
   }
 })
 
