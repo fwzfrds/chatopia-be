@@ -11,6 +11,7 @@ const io = new Server(httpServer, {
     methods: ['GET', 'POST', 'PUT', 'DELETE']
   }
 })
+// ada error lagi pas deploy
 
 const cors = require('cors')
 const createError = require('http-errors')
