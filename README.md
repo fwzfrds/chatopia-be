@@ -3,7 +3,7 @@
 
   <h3 align="center">Chatopia</h3>
   <p align="center">
-    <image align="center" width="150" src='./logo/logo.png' />
+    <image align="center" width="150" src='./logo/chatopia.png' />
   </p>
 
   <p align="center">
