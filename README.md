@@ -43,6 +43,7 @@ Chatopia Rest API, is a REST API used in [`Chatopia`](https://chatopia-fwzfrds.v
 * [PostgreSQL](https://www.postgresql.org/)
 * [Nodemailer](https://nodemailer.com/)
 * [Cloudinary](https://cloudinary.com/)
+* [https://socket.io/](https://socket.io/)
 
 
 <!-- GETTING STARTED -->
